@@ -6,6 +6,10 @@ const app = express()
 
 const SELECT_ALL_USER_QUERY = 'SELECT * FROM user'
 
+app.get('/', (req, res) => {
+    res.send('get users')
+})
+
 const connection = mysql.createConnection({
     host: '182.50.133.77:3306',  //182.50.133.77:3306 //localhost
     port: 3306,
@@ -150,21 +154,6 @@ app.post('/clients/updateclientInfo', (req, res) => {
     })
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-app.get('/', (req, res) => {
-    res.send('get users')
-})
 app.get('/user', (req, res) => {
     connection.query(SELECT_ALL_USER_QUERY, (err, resultados) => {
         if (err) {
