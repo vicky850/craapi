@@ -83,6 +83,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+// //clients calls
+// //get call
+app.get('/test', (req, res) => {
+    return res.send({"hello": "hi"});
+})
+
 
 // //clients calls
 // //get call
