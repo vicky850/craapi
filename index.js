@@ -180,3 +180,5 @@ app.post('/clients/updateclientInfo', (req, res) => {
 app.listen(7000, () => {
     console.log('server started at port 7000')
 })
+
+module.exports={app};
