@@ -12,19 +12,14 @@ var bodyParser = require('body-parser')
 var path = require('path');
 
 const app = express()
-var allowCrossDomain = function(req, res, next) {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With, Accept');
-    
-        // intercept OPTIONS method
-        if ('OPTIONS' == req.method) {
-            res.send(200);
-        } else {
-            next();
-        }
-    };
-    app.use(allowCrossDomain);
+
+
+var corsOptions = {
+    origin: ['http://localhost:3040'],
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
