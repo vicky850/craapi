@@ -2,11 +2,23 @@ const express = require('express')
 const cors = require('cors')
 const mysql = require('mysql')
 var bodyParser = require('body-parser')
+var path = require('path');
+
 const app = express()
 
-const SELECT_ALL_USER_QUERY = 'SELECT * FROM user'
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+app.use(express.static(path.join(__dirname, '../')));
+app.options('*', cors()); 
+//app.use(cors());
 
-app.use(cors())
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
 
 var db_config = {
     host: "182.50.133.77",
@@ -39,13 +51,6 @@ var db_config = {
   
   handleDisconnect();
 
-// Add headers
-
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
- 
-// parse application/json
-app.use(bodyParser.json())
 
 app.get("/api/clients", function(req, res) {
     const createdby=req.query.createdby;
