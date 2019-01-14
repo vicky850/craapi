@@ -10,6 +10,7 @@ const cors = require('cors')
 const mysql = require('mysql')
 var bodyParser = require('body-parser')
 var path = require('path');
+const port = process.env.PORT || 3000;
 
 const app = express()
 app.use(cors());
@@ -178,7 +179,7 @@ app.post('/api/clients/updateclientInfo', (req, res) => {
     })
 })
 
-app.listen(7000, () => {
-    console.log('server started at port 7000')
+app.listen(port, () => {
+    console.log(`server started at port: ${port}`)
 })
 module.exports={app};
