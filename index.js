@@ -54,6 +54,9 @@ var db_config = {
   
   handleDisconnect();
 
+  app.get("/api/dummy", function(req, res) {
+    return res.send({a: 1, b:2});
+  })
 
 app.get("/api/clients", function(req, res) {
     const createdby=req.query.createdby;
