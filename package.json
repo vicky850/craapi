@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "keywords": [],
@@ -15,9 +14,7 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "express": "^4.16.2",
-    "js-yaml": "^3.12.1",
-    "mysql": "^2.15.0",
-    "openode": "^1.9.0"
+    "mysql": "^2.15.0"
   },
   "engines": {
     "node": "10.x"
