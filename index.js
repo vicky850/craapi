@@ -55,7 +55,7 @@ var db_config = {
 app.get("/api/clients", function(req, res) {
     const createdby=req.query.createdby;
     const clientinfo=req.query.clientinfo;
-    const SELECT_ALL_CLIENTS = `SELECT * FROM clientmaster where createdby in ('${createdby}', '') and clientinfo=${clientinfo} order by 'firmname'`
+    const SELECT_ALL_CLIENTS = `SELECT * FROM clientmaster order by 'firmname'`
 
     connection.query(SELECT_ALL_CLIENTS, (err, resultados) => {
         if (err) {
