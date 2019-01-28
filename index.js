@@ -83,7 +83,7 @@ app.get('/api/allactiveclients', (req, res) => {
 // //get call
 app.get('/api/clientInfo', (req, res) => {
     const filenumber=req.query.filenumber;
-    const SELECT_ALL_CLIENTS = `CALL sp_get_all('${filenumber}')`
+    const SELECT_ALL_CLIENTS = `SELECT * FROM clientinfo where filenumber = '${filenumber}'`
     connection.query(SELECT_ALL_CLIENTS, (err, resultados) => {
         if (err) {
             return res.send(err)
