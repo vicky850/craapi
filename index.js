@@ -83,7 +83,7 @@ app.get('/api/allactiveclients', (req, res) => {
 // //get call
 app.get('/api/clientInfo', (req, res) => {
     const filenumber=req.query.filenumber;
-    const SELECT_ALL_CLIENTS = `SELECT * FROM clientinfo where filenumber = '${filenumber}'`
+    const SELECT_ALL_CLIENTS = `CALL sp_get_all('${filenumber}')`
     connection.query(SELECT_ALL_CLIENTS, (err, resultados) => {
         if (err) {
             return res.send(err)
@@ -106,6 +106,76 @@ app.get('/api/clientFee', (req, res) => {
     })
 })
 
+//get call
+app.get('/api/clientEFile', (req, res) => {
+    const filenumber=req.query.filenumber;
+    const SELECT_ALL_CLIENTS = `select Tb1.filenumber,Tb1.firmname,Tb1.year,Tb1.month,Tb1.returntype,Tb1.dateofreceipt,Tb1.comunicationmode,Tb1.personincaselatereturn,Tb1.typeofpendancy,Tb1.fillingdate,Tb1.filledby,Tb1.efillcategory,Tb1.gstr3bturnover,Tb1.correspondacedatepending,Tb1.personname,Tb1.feedue,Tb1.id,Tb2.receivedamount, Tb2.receiptnumber,Tb2.recieptdate from (select * from efiling where filenumber='${filenumber}') as Tb1
+    left join (select filenumber, year, month, sum(receivedamount)receivedamount, receiptnumber, recieptdate from clientfee group by filenumber,year,month) Tb2 on Tb1.filenumber=Tb2.filenumber and Tb1.year=Tb2.year and Tb1.month=Tb2.month`
+    connection.query(SELECT_ALL_CLIENTS, (err, resultados) => {
+        if (err) {
+            return res.send(err)
+        } else {
+            return res.send(resultados);
+        }
+    })
+})
+
+//create call
+app.put('/api/clients/addFee', (req, res) => {
+    const body = req.body;
+    let columns=Object.keys(req.body[0]);
+
+    const serialize = body.map(data=>columns.map(key => `'${decodeURIComponent(data[key])}'`).join(','));
+    let newArr=[];
+    for(let i=0; i<serialize.length; i++){
+        newArr.push(`(${serialize[i]})`);
+    }
+    let finalValues = newArr.join(',');
+    const INSERT_USER_QUERY = `Delete from clientfee where filenumber=${body[0].filenumber} INSERT INTO clientfee(${columns.toString()}) VALUES ${finalValues}`
+    connection.query(INSERT_USER_QUERY, (err, resultados) => {
+        if (err) {
+            return res.send(err)
+        } else {
+            return res.send('insert successful')
+        }
+    })
+})
+
+//create call
+app.put('/api/clients/addEFile', (req, res) => {
+    const body = req.body;
+    let columns=Object.keys(req.body[0]);
+
+    const serialize = body.map(data=>columns.map(key => `'${decodeURIComponent(data[key])}'`).join(','));
+    let newArr=[];
+    for(let i=0; i<serialize.length; i++){
+        //newArr.push(`${serialize[i]}`);
+        newArr.push(`(${serialize[i]})`);
+    }
+    let finalValues = newArr.join(',');
+    const INSERT_USER_QUERY = `Delete from efiling where filenumber='${body[0].filenumber}'; INSERT INTO efiling(${columns.toString()}) VALUES ${finalValues}`
+    //const INSERT_USER_QUERY = `CALL sp_insertEfile(${finalValues})`
+    connection.query(INSERT_USER_QUERY, (err, resultados) => {
+        if (err) {
+            return res.send(err)
+        } else {
+            return res.send('insert successful')
+        }
+    })
+})
+
+//get call
+app.get('/api/clientEFile/add', (req, res) => {
+    const filenumber=req.query.filenumber;
+    const SELECT_ALL_CLIENTS = `SELECT * FROM efiling where filenumber = '${filenumber}'`
+    connection.query(SELECT_ALL_CLIENTS, (err, resultados) => {
+        if (err) {
+            return res.send(err)
+        } else {
+            return res.send(resultados);
+        }
+    })
+})
 
 //create call
 app.put('/api/clients/add', (req, res) => {
@@ -137,26 +207,7 @@ app.put('/api/clients/addInfo', (req, res) => {
     })
 })
 
-//create call
-app.put('/api/clients/addFee', (req, res) => {
-    const body = req.body;
-    let columns=Object.keys(req.body[0]);
 
-    const serialize = body.map(data=>columns.map(key => `'${decodeURIComponent(data[key])}'`).join(','));
-    let newArr=[];
-    for(let i=0; i<serialize.length; i++){
-        newArr.push(`(${serialize[i]})`);
-    }
-    let finalValues = newArr.join(',');
-    const INSERT_USER_QUERY = `Delete from efiling where filenumber=${body[0].filenumber} INSERT INTO efiling(${columns.toString()}) VALUES ${finalValues}`
-    connection.query(INSERT_USER_QUERY, (err, resultados) => {
-        if (err) {
-            return res.send(err)
-        } else {
-            return res.send('insert successful')
-        }
-    })
-})
 
 //update call
 app.post('/api/clients/updateclientInfo', (req, res) => {
