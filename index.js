@@ -96,7 +96,7 @@ app.get('/api/clientInfo', (req, res) => {
 //get call
 app.get('/api/clientFee', (req, res) => {
     const filenumber=req.query.filenumber;
-    const SELECT_ALL_CLIENTS = `SELECT * FROM efiling where filenumber = '${filenumber}'`
+    const SELECT_ALL_CLIENTS = `CALL sp_get_all('${filenumber}')`;
     connection.query(SELECT_ALL_CLIENTS, (err, resultados) => {
         if (err) {
             return res.send(err)
